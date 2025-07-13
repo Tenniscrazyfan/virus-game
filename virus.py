@@ -1,56 +1,84 @@
 import pgzrun
 import random
-import time
+from time import time
 
 WIDTH = 600
 HEIGHT = 600
 
-virus = Actor("bee")
+virus = Actor("samell_bacteria")
 injection = Actor("flower")
 human = Actor("alien")
-score = 0
-endgame = False
-life = 3
 
-virus.pos = 400,400
-injection.pos = 300,300
-human.pos = 250,500
+score = 0
+lives = 3  
+virus.pos = 400, 400
+injection.pos = 300, 300
+human.pos = 250, 500
+starttime = time()
+totaltime = 0
+game_over = False
 
 def draw():
-    screen.fill("Sky Blue")
+    screen.fill("sky blue")
     virus.draw()
     injection.draw()
     human.draw()
 
+    screen.draw.text("Score: " + str(score), (10, 10), color="black")
+    screen.draw.text("Lives: " + str(lives), (10, 30), color="black")
+
+    if game_over:
+        screen.fill("black")
+        screen.draw.text("GAME OVER", center=(350,350), fontsize=60, color="white")
+        screen.draw.text("Score: " + str(score), (10, 10), color="white")
+        screen.draw.text("Lives: " + str(lives), (10, 30), color="white")
+
+    
+
 def update():
-    global virus_attack,score,life
+    global score, lives, game_over,starttime,totaltime
 
-    if keyboard.left and human.x > 20:
-        human.x = human.x - 5
+    
+    totaltime = time() 
+
+    if totaltime - starttime >= 1:
+        starttime = time()
+        virus.pos = random.randint(50, 550), random.randint(50, 550)
+        
+    
+    if keyboard.left and human.x > 30:
+        human.x = human.x - 2
     if keyboard.right and human.x < 570:
-        human.x = human.x + 5
-    if keyboard.up and human.y > 20:
-        human.y = human.y - 5
+        human.x = human.x + 2
+    if keyboard.up and human.y > 30:
+        human.y = human.y - 2
     if keyboard.down and human.y < 570:
-        human.y = human.y + 5
+        human.y = human.y + 2
 
-    for i in range(5):
-        virus.x = random.randint(50,550)
-        virus.y = random.randint(50,550)
-        injection.x = random.randint(50,550)
-        injection.y = random.randint(50,550)
-        time.sleep(1)
-
+    
     if human.colliderect(virus):
         score = score - 10
-        life = life - 1
+        lives = lives - 1
+        virus.pos = random.randint(50, 550), random.randint(50, 550)
+        if lives <= 0:
+            game_over = True
+
+    
     if human.colliderect(injection):
         score = score + 11
+        injection.pos = random.randint(50, 550), random.randint(50, 550)
+
+
+
+
+pgzrun.go()
+
+
 
 
 
 
    
 
-pgzrun.go()
+
 
